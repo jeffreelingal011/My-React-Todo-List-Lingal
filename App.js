@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; //npm install bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 const TodoApp = () => {
@@ -8,9 +8,12 @@ const TodoApp = () => {
   const [selectedTask, setSelectedTask] = useState(null);
 
   const handleCreate = () => {
-    const newTaskWithSequence = `Task ${tasks.length + 1}: ${newTask}`;
-    setTasks([...tasks, newTaskWithSequence]);
-    setNewTask("");
+    if (newTask.trim() !== "") {
+      const newTaskWithSequence = `Task ${tasks.length + 1}: ${newTask}`;
+      setTasks([...tasks, newTaskWithSequence]);
+      setNewTask("");
+      setSelectedTask(null);
+    }
   };
 
   const handleUpdate = () => {
@@ -29,11 +32,7 @@ const TodoApp = () => {
   const handleDelete = () => {
     if (selectedTask !== null) {
       setTasks((prevTasks) =>
-        prevTasks
-          .filter((_, index) => index !== selectedTask)
-          .map(
-            (task, index) => `Task ${index + 1}: ${task.split(":")[1].trim()}`
-          )
+        prevTasks.filter((_, index) => index !== selectedTask)
       );
       setNewTask("");
       setSelectedTask(null);
@@ -53,14 +52,22 @@ const TodoApp = () => {
         />
       </div>
       <div className="mb-3">
-        <button className="btn btn-primary mr-2" onClick={handleCreate}>
-          Create
-        </button>
-        <button className="btn btn-warning mr-2" onClick={handleUpdate}>
+        <button
+          className="btn btn-warning mr-2"
+          onClick={handleUpdate}
+          disabled={selectedTask === null}
+        >
           Update
         </button>
-        <button className="btn btn-danger" onClick={handleDelete}>
+        <button
+          className="btn btn-danger mr-2"
+          onClick={handleDelete}
+          disabled={selectedTask === null}
+        >
           Delete
+        </button>
+        <button className="btn btn-primary" onClick={handleCreate}>
+          Create
         </button>
       </div>
       <div className="task-list-container">
